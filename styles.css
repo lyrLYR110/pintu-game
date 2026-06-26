@@ -1,0 +1,631 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    backdrop-filter: blur(10px);
+}
+
+/* 头部样式 */
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    font-weight: 300;
+}
+
+/* 游戏设置区域 */
+.game-setup {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.image-section, .difficulty-section {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 15px;
+    border-left: 5px solid #667eea;
+}
+
+.image-section h2, .difficulty-section h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+/* 预设图片样式 */
+.preset-images h3, .upload-section h3 {
+    margin-bottom: 15px;
+    color: #34495e;
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.preset-image {
+    cursor: pointer;
+    border: 3px solid transparent;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.preset-image:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.preset-image.selected {
+    border-color: #667eea;
+    transform: scale(1.05);
+}
+
+.preset-image img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+}
+
+/* 上传区域样式 */
+.upload-label {
+    display: block;
+    cursor: pointer;
+}
+
+.upload-box {
+    border: 3px dashed #ccc;
+    border-radius: 10px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.upload-box:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.upload-icon {
+    display: block;
+    font-size: 3rem;
+    color: #ccc;
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+}
+
+.upload-box:hover .upload-icon {
+    color: #667eea;
+}
+
+.upload-box p {
+    color: #7f8c8d;
+    font-size: 1rem;
+}
+
+/* 难度选择样式 */
+.difficulty-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.difficulty-btn {
+    padding: 20px 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.difficulty-btn small {
+    font-size: 0.8rem;
+    font-weight: 300;
+    opacity: 0.8;
+}
+
+.difficulty-btn[data-difficulty="easy"] {
+    background: linear-gradient(135deg, #74b9ff, #0984e3);
+}
+
+.difficulty-btn[data-difficulty="medium"] {
+    background: linear-gradient(135deg, #fd79a8, #e84393);
+}
+
+.difficulty-btn[data-difficulty="hard"] {
+    background: linear-gradient(135deg, #ff7675, #d63031);
+}
+
+.difficulty-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.difficulty-btn.selected {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.5), 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* 开始按钮样式 */
+.start-btn {
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    color: white;
+    border: none;
+    padding: 18px;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.start-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.start-btn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 游戏区域样式 */
+.game-area {
+    width: 100%;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.control-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.control-btn:hover {
+    background: #764ba2;
+    transform: translateY(-2px);
+}
+
+.timer-container {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+#timer {
+    font-weight: 700;
+    color: #e74c3c;
+}
+
+/* 游戏布局样式 */
+.game-layout {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+    width: 100%;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.puzzle-section {
+    flex: 1;
+    max-width: 600px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    min-width: 300px;
+}
+
+.pieces-section {
+    width: 300px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    min-width: 300px;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.puzzle-section h3, .pieces-section h3 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* 拼图板样式 - 添加视觉指示和增大区域 */
+.puzzle-board {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+    max-width: 500px; /* 增大最大宽度 */
+    border: 2px dashed #667eea; /* 添加虚线边框作为视觉指示 */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 添加视觉指示元素 */
+.puzzle-board::before {
+    content: "拼图区域";
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(102, 126, 234, 0.9);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 5;
+}
+
+/* 添加辅助网格线作为视觉指示 */
+.puzzle-board::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        repeating-linear-gradient(to right, transparent, transparent 49px, rgba(102, 126, 234, 0.1) 50px, rgba(102, 126, 234, 0.1) 51px),
+        repeating-linear-gradient(to bottom, transparent, transparent 49px, rgba(102, 126, 234, 0.1) 50px, rgba(102, 126, 234, 0.1) 51px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 记忆时间遮罩层 */
+.memory-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    border-radius: 8px;
+}
+
+.memory-content {
+    text-align: center;
+    color: white;
+}
+
+#memoryImage {
+    max-width: 80%;
+    max-height: 70%;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+#memoryTimer {
+    font-size: 60px;
+    font-weight: bold;
+    color: #667eea;
+    text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+}
+
+/* 旋转控制按钮 */
+.rotate-controls {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 200;
+}
+
+.rotate-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: #667eea;
+    color: white;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rotate-btn:hover {
+    background-color: #5a5fcc;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+.rotate-btn:active {
+    transform: scale(0.95);
+}
+
+/* 选中的拼图块样式 */
+.puzzle-piece.selected {
+    box-shadow: 0 0 0 3px #4CAF50, 0 4px 12px rgba(76, 175, 80, 0.4);
+    z-index: 150 !important;
+}
+
+/* 正确放置的拼图块样式 */
+.puzzle-piece.correct {
+    cursor: default;
+    transform: rotate(0deg) !important;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+    z-index: 10;
+    filter: drop-shadow(3px 3px 6px rgba(76, 175, 80, 0.4)); /* 正确位置时使用绿色阴影 */
+}
+
+/* 移除槽位样式 - 不再需要虚线框 */
+.puzzle-slot {
+    position: absolute;
+    width: 0;
+    height: 0;
+    /* 隐藏槽位 */
+}
+
+/* 拼图碎片区域样式 - 自由布局样式 */
+.pieces-container {
+    display: block;
+    padding: 10px;
+    background: #e9ecef;
+    border-radius: 10px;
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 拼图碎片样式 - 自由布局样式 */
+.puzzle-piece {
+    cursor: grab;
+    background-size: cover;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    user-select: none;
+    aspect-ratio: 1 / 1;
+    background-position: center;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    position: relative;
+    transform: rotate(var(--rotation, 0deg));
+    outline: none;
+    background-color: #fff; /* 背景色，确保透明度区域显示为白色 */
+    filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2)); /* 添加阴影，增强立体感 */
+}
+
+.puzzle-piece:hover {
+    transform: scale(1.02) rotate(var(--rotation, 0deg));
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.puzzle-piece:active {
+    cursor: grabbing;
+}
+
+/* 拖拽预览样式 */
+.puzzle-piece.dragging {
+    opacity: 0.8;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.3)); /* 拖动时阴影更大 */
+}
+
+/* 拼图板上放置的拼图样式 */
+.puzzle-board .puzzle-piece {
+    position: absolute;
+    z-index: 10;
+    cursor: move;
+}
+
+.puzzle-piece:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 模态框样式 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: modalIn 0.3s ease-out;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-content h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.modal-content p {
+    color: #7f8c8d;
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+}
+
+#winTime {
+    font-weight: 700;
+    color: #e74c3c;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#playAgainBtn {
+    background: #00b894;
+    color: white;
+}
+
+#newGameBtn {
+    background: #667eea;
+    color: white;
+}
+
+.modal-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 页脚样式 */
+footer {
+    margin-top: 40px;
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .difficulty-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .image-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .game-info {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .modal-content {
+        margin: 20px;
+        padding: 30px 20px;
+    }
+    
+    .modal-buttons {
+        flex-direction: column;
+    }
+}
+
+/* 加载动画 */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

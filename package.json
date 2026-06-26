@@ -1,0 +1,12 @@
+{
+  "name": "pintu-miniprogram",
+  "version": "1.0.0",
+  "description": "照片碎片化拼图记忆力挑战",
+  "scripts": {
+    "dev": "echo '请使用微信开发者工具打开项目'",
+    "build": "echo '请使用微信开发者工具进行构建'"
+  },
+  "keywords": ["小程序", "微信", "拼图", "游戏"],
+  "author": "",
+  "license": "MIT"
+}

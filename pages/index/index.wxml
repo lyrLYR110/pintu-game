@@ -1,0 +1,171 @@
+<view class="container">
+  <view class="header">
+    <view class="logo-area">
+      <view class="logo">
+        <text class="logo-text">🧩</text>
+      </view>
+      <view class="brand">
+        <text class="brand-title">照片碎片化拼图</text>
+        <text class="brand-subtitle">挑战你的记忆力和观察力</text>
+      </view>
+    </view>
+    <view class="music-control" bindtap="toggleMusic">
+      <text class="music-icon">{{isMusicPlaying ? '🔊' : '🔇'}}</text>
+    </view>
+  </view>
+
+  <view class="game-setup card" wx:if="{{!gameStarted}}">
+    <view class="section">
+      <text class="title">选择图片</text>
+      <text class="subtitle">点击选择预设图片或上传自己的图片</text>
+      
+      <view class="preset-images">
+        <view 
+          wx:for="{{presetImages}}" 
+          wx:key="id"
+          class="preset-item {{selectedImage === item.url ? 'selected' : ''}}"
+          bindtap="selectPresetImage"
+          data-img="{{item.url}}"
+        >
+          <image src="{{item.url}}" mode="aspectFill" class="preset-image" />
+          <view class="preset-label">{{item.name}}</view>
+        </view>
+      </view>
+
+      <view class="upload-area">
+        <view class="upload-box" bindtap="uploadImage">
+          <text class="upload-icon">📷</text>
+          <text class="upload-text">上传图片</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <text class="title">选择难度</text>
+      <view class="difficulty-options">
+        <view 
+          class="difficulty-btn {{selectedDifficulty === 'easy' ? 'selected' : ''}}"
+          bindtap="selectDifficulty"
+          data-difficulty="easy"
+        >
+          <text class="difficulty-label">简单</text>
+          <text class="difficulty-detail">3×3</text>
+        </view>
+        <view 
+          class="difficulty-btn {{selectedDifficulty === 'medium' ? 'selected' : ''}}"
+          bindtap="selectDifficulty"
+          data-difficulty="medium"
+        >
+          <text class="difficulty-label">中等</text>
+          <text class="difficulty-detail">4×4</text>
+        </view>
+        <view 
+          class="difficulty-btn {{selectedDifficulty === 'hard' ? 'selected' : ''}}"
+          bindtap="selectDifficulty"
+          data-difficulty="hard"
+        >
+          <text class="difficulty-label">困难</text>
+          <text class="difficulty-detail">5×5</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <text class="title">选择背景音乐</text>
+      <view class="music-options">
+        <view 
+          wx:for="{{musicList}}" 
+          wx:key="id"
+          class="music-item {{currentMusicIndex === index ? 'selected' : ''}}"
+          bindtap="selectMusic"
+          data-index="{{index}}"
+        >
+          <text class="music-name">{{item.name}}</text>
+          <text class="music-artist">{{item.artist}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="start-area">
+      <button 
+        class="btn start-btn {{(!selectedImage || !selectedDifficulty) ? 'btn-disabled' : ''}}" 
+        bindtap="startGame" 
+        disabled="{{!selectedImage || !selectedDifficulty}}"
+      >
+        <text>开始游戏</text>
+      </button>
+    </view>
+  </view>
+
+  <view class="game-area" wx:if="{{gameStarted}}">
+    <view class="game-header">
+      <view class="timer">
+        <text class="timer-icon">⏱️</text>
+        <text class="timer-text">{{formatTime(timer)}}</text>
+      </view>
+      <view class="game-controls">
+        <button class="btn btn-secondary" bindtap="restartGame">
+          <text>重新开始</text>
+        </button>
+        <button class="btn btn-secondary" bindtap="goHome">
+          <text>返回首页</text>
+        </button>
+      </view>
+    </view>
+
+    <view class="memory-overlay" wx:if="{{showMemory}}">
+      <view class="memory-content">
+        <text class="memory-title">记住图片</text>
+        <image src="{{selectedImage}}" mode="aspectFit" class="memory-image" />
+        <text class="memory-countdown">{{memoryCountdown}}</text>
+      </view>
+    </view>
+
+    <view class="rotate-controls" wx:if="{{showRotateControls && selectedPiece}}">
+      <button class="rotate-btn" bindtap="rotatePieceLeft">↺</button>
+      <button class="rotate-btn" bindtap="rotatePieceRight">↻</button>
+    </view>
+
+    <view class="puzzle-board-container">
+      <view class="puzzle-board">
+        <view 
+          wx:for="{{pieces}}" 
+          wx:key="id"
+          class="puzzle-piece {{selectedPiece && selectedPiece.id === item.id ? 'selected' : ''}}"
+          style="width: {{pieceSize}}rpx; height: {{pieceSize}}rpx; left: {{item.x * pieceSize}}rpx; top: {{item.y * pieceSize}}rpx; background-image: url({{selectedImage}}); background-position: -{{item.correctX * pieceSize}}rpx -{{item.correctY * pieceSize}}rpx; background-size: {{gridSize * pieceSize}}rpx {{gridSize * pieceSize}}rpx; transform: rotate({{item.rotation}}deg);"
+          bindtap="selectPiece"
+          data-id="{{item.id}}"
+        >
+          <view class="piece-marker" wx:if="{{item.isCorrect}}">✓</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="game-info">
+      <text class="info-text">点击两个拼图块进行位置调换，点击旋转按钮旋转选中的拼图</text>
+      <text class="correct-count">已完成: {{correctCount}}/{{totalPieces}}</text>
+    </view>
+
+    <view class="win-modal" wx:if="{{showWin}}">
+      <view class="win-content">
+        <text class="win-emoji">{{winResult.emoji}}</text>
+        <text class="win-title">{{winResult.title}}</text>
+        <text class="win-time">用时: {{formatTime(finalTime)}}</text>
+        <view class="win-rating">
+          <view class="rating-stars">
+            <text wx:for="{{5}}" wx:key="index" class="star">{{index < winResult.stars ? '⭐' : '☆'}}</text>
+          </view>
+          <text class="rating-comment">{{winResult.comment}}</text>
+        </view>
+        <view class="win-buttons">
+          <button class="btn" bindtap="restartGame">
+            <text>再来一局</text>
+          </button>
+          <button class="btn btn-secondary" bindtap="goHome">
+            <text>返回首页</text>
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

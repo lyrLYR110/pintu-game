@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>照片碎片化拼图记忆力挑战</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>照片碎片化拼图</h1>
+            <p class="subtitle">上传图片或选择预设图片，挑战不同难度</p>
+        </header>
+
+        <div id="gameSetup" class="game-setup">
+            <div class="image-section">
+                <h2>选择图片</h2>
+                
+                <!-- 预设图片选择 -->
+                <div class="preset-images">
+                    <h3>预设图片</h3>
+                    <div class="image-grid">
+                        <div class="preset-image" data-img="images/1.svg">
+                            <img src="images/1.svg" alt="预设图片1">
+                        </div>
+                        <div class="preset-image" data-img="images/2.svg">
+                            <img src="images/2.svg" alt="预设图片2">
+                        </div>
+                        <div class="preset-image" data-img="images/3.svg">
+                            <img src="images/3.svg" alt="预设图片3">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 上传图片区域 -->
+                <div class="upload-section">
+                    <h3>上传图片</h3>
+                    <label for="imageUpload" class="upload-label">
+                        <div class="upload-box">
+                            <span class="upload-icon">+</span>
+                            <p>点击或拖拽上传图片</p>
+                        </div>
+                    </label>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <div class="difficulty-section">
+                <h2>选择难度</h2>
+                <div class="difficulty-options">
+                    <button class="difficulty-btn" data-difficulty="easy">简单<br><small>3×3 (9块)</small></button>
+                    <button class="difficulty-btn" data-difficulty="medium">困难<br><small>4×4 (16块)</small></button>
+                    <button class="difficulty-btn" data-difficulty="hard">恶魔<br><small>5×5 (25块)</small></button>
+                </div>
+            </div>
+
+            <button id="startGame" class="start-btn">开始游戏</button>
+        </div>
+
+        <div id="gameArea" class="game-area" style="display: none;">
+            <div class="game-info">
+                <button id="restartBtn" class="control-btn">重新开始</button>
+                <button id="changeImageBtn" class="control-btn">更换图片</button>
+                <div class="timer-container">
+                    <span>用时: </span>
+                    <span id="timer">00:00</span>
+                </div>
+            </div>
+            
+            <div class="game-layout">
+                <div class="puzzle-section">
+                    <h3>拼图区域</h3>
+                    <!-- 记忆时间遮罩层 -->
+                    <div id="memoryOverlay" class="memory-overlay" style="display: none;">
+                        <div class="memory-content">
+                            <img id="memoryImage" src="" alt="完整图片预览">
+                            <div id="memoryTimer">5</div>
+                        </div>
+                    </div>
+                    <!-- 旋转按钮容器 -->
+                    <div id="rotateControls" class="rotate-controls" style="display: none;">
+                        <button id="rotateLeft" class="rotate-btn rotate-left">↺</button>
+                        <button id="rotateRight" class="rotate-btn rotate-right">↻</button>
+                    </div>
+                    <div id="puzzleBoard" class="puzzle-board">
+                        <!-- 拼图区域将由JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="pieces-section">
+                    <h3>碎片区域</h3>
+                    <div id="piecesContainer" class="pieces-container">
+                        <!-- 拼图碎片将由JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <div id="winModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>恭喜你完成了拼图！</h2>
+                    <p>用时: <span id="winTime">00:00</span></p>
+                    <div class="modal-buttons">
+                        <button id="playAgainBtn" class="modal-btn">再来一局</button>
+                        <button id="newGameBtn" class="modal-btn">新游戏</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>CET游戏团制作</p>
+    </footer>
+
+    <!-- 音效元素 -->
+    <audio id="correctSound" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2628/2628-preview.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script src="app.js"></script>
+</body>
+</html>

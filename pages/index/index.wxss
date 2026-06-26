@@ -1,0 +1,525 @@
+.container {
+  min-height: 100vh;
+  padding: 30rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.logo {
+  width: 100rpx;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-text {
+  font-size: 56rpx;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #fff;
+}
+
+.brand-subtitle {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 8rpx;
+}
+
+.music-control {
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.music-icon {
+  font-size: 36rpx;
+}
+
+.game-setup {
+  background: #fff;
+  border-radius: 30rpx;
+  padding: 40rpx;
+}
+
+.section {
+  margin-bottom: 40rpx;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.subtitle {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 24rpx;
+  display: block;
+}
+
+.preset-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  justify-content: space-between;
+}
+
+.preset-item {
+  width: calc(33.33% - 14rpx);
+  height: 220rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  border: 4rpx solid transparent;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.preset-item.selected {
+  border-color: #667eea;
+  box-shadow: 0 0 0 6rpx rgba(102, 126, 234, 0.2);
+}
+
+.preset-image {
+  width: 100%;
+  height: 100%;
+}
+
+.preset-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12rpx;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  color: #fff;
+  font-size: 22rpx;
+  text-align: center;
+}
+
+.upload-area {
+  margin-top: 24rpx;
+}
+
+.upload-box {
+  width: 100%;
+  height: 160rpx;
+  border: 4rpx dashed #ddd;
+  border-radius: 16rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  transition: all 0.3s ease;
+}
+
+.upload-box:active {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.upload-icon {
+  font-size: 48rpx;
+}
+
+.upload-text {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.difficulty-options {
+  display: flex;
+  gap: 24rpx;
+  justify-content: space-between;
+}
+
+.difficulty-btn {
+  flex: 1;
+  padding: 24rpx;
+  background: #f5f7fa;
+  border-radius: 16rpx;
+  text-align: center;
+  border: 3rpx solid transparent;
+  transition: all 0.3s ease;
+}
+
+.difficulty-btn.selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+}
+
+.difficulty-btn.selected .difficulty-label,
+.difficulty-btn.selected .difficulty-detail {
+  color: #fff;
+}
+
+.difficulty-label {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  display: block;
+}
+
+.difficulty-detail {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 8rpx;
+  display: block;
+}
+
+.music-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.music-item {
+  padding: 20rpx;
+  background: #f5f7fa;
+  border-radius: 12rpx;
+  border: 3rpx solid transparent;
+  transition: all 0.3s ease;
+}
+
+.music-item.selected {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: #667eea;
+}
+
+.music-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  display: block;
+}
+
+.music-artist {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 4rpx;
+  display: block;
+}
+
+.start-area {
+  margin-top: 40rpx;
+}
+
+.btn {
+  width: 100%;
+  height: 96rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-disabled {
+  opacity: 0.5;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: #667eea;
+  border: 3rpx solid #667eea;
+  box-shadow: none;
+}
+
+.game-area {
+  background: #fff;
+  border-radius: 30rpx;
+  padding: 30rpx;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 16rpx 24rpx;
+  background: #f5f7fa;
+  border-radius: 24rpx;
+}
+
+.timer-icon {
+  font-size: 32rpx;
+}
+
+.timer-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  font-family: monospace;
+}
+
+.game-controls {
+  display: flex;
+  gap: 16rpx;
+}
+
+.game-controls .btn {
+  width: auto;
+  height: 72rpx;
+  padding: 0 32rpx;
+  font-size: 26rpx;
+}
+
+.memory-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.memory-content {
+  text-align: center;
+  padding: 40rpx;
+}
+
+.memory-title {
+  font-size: 36rpx;
+  color: #fff;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 30rpx;
+}
+
+.memory-image {
+  width: 500rpx;
+  height: 500rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.3);
+}
+
+.memory-countdown {
+  font-size: 120rpx;
+  color: #fff;
+  font-weight: 700;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.5);
+}
+
+.rotate-controls {
+  position: fixed;
+  top: 200rpx;
+  right: 50rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  z-index: 50;
+}
+
+.rotate-btn {
+  width: 80rpx;
+  height: 80rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
+}
+
+.puzzle-board-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30rpx;
+}
+
+.puzzle-board {
+  width: 600rpx;
+  height: 600rpx;
+  position: relative;
+  background: #eee;
+  border-radius: 16rpx;
+  overflow: hidden;
+  border: 4rpx solid #ddd;
+}
+
+.puzzle-piece {
+  position: absolute;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2rpx solid rgba(255, 255, 255, 0.5);
+  box-sizing: border-box;
+}
+
+.puzzle-piece.selected {
+  box-shadow: 0 0 0 4rpx #667eea, 0 4rpx 12rpx rgba(102, 126, 234, 0.5);
+  z-index: 10;
+}
+
+.puzzle-piece.isCorrect {
+  box-shadow: 0 0 10rpx rgba(76, 175, 80, 0.6);
+}
+
+.piece-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60rpx;
+  height: 60rpx;
+  background: rgba(76, 175, 80, 0.9);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-info {
+  background: #f5f7fa;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  text-align: center;
+}
+
+.info-text {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.correct-count {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.win-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.win-content {
+  background: #fff;
+  border-radius: 30rpx;
+  padding: 60rpx 40rpx;
+  text-align: center;
+  margin: 30rpx;
+}
+
+.win-emoji {
+  font-size: 80rpx;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.win-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.win-time {
+  font-size: 28rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 24rpx;
+}
+
+.win-rating {
+  margin-bottom: 32rpx;
+}
+
+.rating-stars {
+  display: flex;
+  justify-content: center;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.star {
+  font-size: 40rpx;
+}
+
+.rating-comment {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+  display: block;
+  margin-bottom: 40rpx;
+}
+
+.win-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.win-buttons .btn {
+  height: 96rpx;
+}
