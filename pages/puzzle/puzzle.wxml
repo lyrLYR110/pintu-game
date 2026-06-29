@@ -1,0 +1,99 @@
+<view class="container">
+  <!-- 游戏头部信息 -->
+  <view class="game-header">
+    <view class="timer-section">
+      <text class="timer-icon">\u23F1\uFE0F</text>
+      <text class="timer-text">{{formatTime(timer)}}</text>
+    </view>
+    <view class="round-info" wx:if="{{isMultiplayer}}">
+      <text class="round-text">第 {{roundIndex + 1}}/{{totalRounds}} 轮</text>
+    </view>
+    <view class="game-actions">
+      <button class="btn btn-sm" bindtap="restartGame">重新开始</button>
+      <button class="btn btn-sm btn-secondary" bindtap="goHome">返回首页</button>
+    </view>
+  </view>
+
+  <!-- 记忆覆盖层 -->
+  <view class="memory-overlay" wx:if="{{showMemory}}">
+    <view class="memory-content">
+      <text class="memory-title">记住图片</text>
+      <image src="{{selectedImage}}" mode="aspectFit" class="memory-image" />
+      <text class="memory-countdown">{{memoryCountdown}}</text>
+    </view>
+  </view>
+
+  <!-- 旋转控制 -->
+  <view class="rotate-controls" wx:if="{{showRotateControls && selectedPiece && !selectedPiece.isCorrect}}">
+    <button class="rotate-btn" bindtap="rotatePieceLeft">\u21BA</button>
+    <button class="rotate-btn" bindtap="rotatePieceRight">\u21BB</button>
+  </view>
+
+  <!-- 拼图板 -->
+  <view class="puzzle-board-wrapper">
+    <view class="puzzle-board" style="width: {{gridSize * pieceSize}}rpx; height: {{gridSize * pieceSize}}rpx;">
+      <view
+        wx:for="{{pieces}}"
+        wx:key="id"
+        class="puzzle-piece {{selectedPiece && selectedPiece.id === item.id ? 'piece-selected' : ''}} {{item.isCorrect ? 'piece-correct' : ''}}"
+        style="width: {{pieceSize}}rpx; height: {{pieceSize}}rpx; left: {{item.x * pieceSize}}rpx; top: {{item.y * pieceSize}}rpx; background-image: url({{selectedImage}}); background-position: -{{item.correctX * pieceSize}}rpx -{{item.correctY * pieceSize}}rpx; background-size: {{gridSize * pieceSize}}rpx {{gridSize * pieceSize}}rpx; transform: rotate({{item.rotation}}deg);"
+        bindtap="selectPiece"
+        data-id="{{item.id}}"
+      >
+        <view class="piece-check" wx:if="{{item.isCorrect}}">\u2713</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作提示 -->
+  <view class="game-info">
+    <text class="info-hint">点击两个拼图块进行位置交换，选中后旋转按钮调整角度</text>
+    <text class="correct-count">已完成: {{correctCount}}/{{totalPieces}}</text>
+  </view>
+
+  <!-- 单人胜利弹窗 -->
+  <view class="modal-overlay" wx:if="{{showWin}}">
+    <view class="modal-content win-modal">
+      <text class="win-emoji">{{winResult.emoji}}</text>
+      <text class="win-title">{{winResult.title}}</text>
+      <text class="win-time">用时: {{formatTime(finalTime)}}</text>
+      <view class="win-stars">
+        <text wx:for="{{5}}" wx:key="index" class="star {{index < winResult.stars ? 'star-on' : ''}}">{{index < winResult.stars ? '\u2B50' : '\u2606'}}</text>
+      </view>
+      <text class="win-comment">{{winResult.comment}}</text>
+      <view class="win-buttons">
+        <button class="btn" bindtap="restartGame">再来一局</button>
+        <button class="btn btn-secondary" bindtap="goHome">返回首页</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 多人本轮流成弹窗 -->
+  <view class="modal-overlay" wx:if="{{showRoundResult}}">
+    <view class="modal-content round-result-modal">
+      <text class="result-emoji">\u2705</text>
+      <text class="result-title">本轮完成! 用时 {{formatTime(timer)}}</text>
+      <text class="result-wait">等待其他玩家完成...</text>
+    </view>
+  </view>
+
+  <!-- 多人最终排名弹窗 -->
+  <view class="modal-overlay" wx:if="{{showFinalResult}}">
+    <view class="modal-content final-modal">
+      <text class="final-title">\u{1F3C6} 最终排名</text>
+      <view class="ranking-list">
+        <view wx:for="{{finalRankings}}" wx:key="openid" class="ranking-item">
+          <view class="rank-badge rank-{{index + 1}}">{{index + 1}}</view>
+          <view class="rank-info">
+            <text class="rank-name">{{item.nickName || '玩家' + (index + 1)}}</text>
+            <text class="rank-stats">{{item.roundWins}} 胜 | 总用时 {{formatTime(item.totalTime)}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="final-buttons">
+        <button class="btn" bindtap="goHome">返回首页</button>
+        <button class="btn btn-secondary" bindtap="backToRoom">返回房间</button>
+      </view>
+    </view>
+  </view>
+</view>

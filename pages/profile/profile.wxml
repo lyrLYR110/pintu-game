@@ -1,0 +1,44 @@
+<view class="container">
+  <!-- 顶部 -->
+  <view class="profile-header">
+    <view class="avatar-area">
+      <image wx:if="{{userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="avatar-img" mode="aspectFill" />
+      <text wx:else class="avatar-placeholder">\u{1F464}</text>
+    </view>
+    <text class="nickname">{{userInfo.nickName || '未登录'}}</text>
+    <button wx:if="{{!isLoggedIn}}" class="btn btn-login" bindtap="handleLogin">微信登录</button>
+    <text wx:else class="login-status">已登录</text>
+  </view>
+
+  <!-- 收藏图片 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">我的收藏图片</text>
+      <button class="btn-upload" bindtap="uploadFavorite">上传</button>
+    </view>
+    <view class="favorite-grid" wx:if="{{favoriteImages.length > 0}}">
+      <view wx:for="{{favoriteImages}}" wx:key="index" class="favorite-item">
+        <image src="{{item.imageUrl}}" mode="aspectFill" class="favorite-img" />
+        <text class="favorite-name">{{item.name || '图片' + (index + 1)}}</text>
+      </view>
+    </view>
+    <text wx:else class="empty-hint">暂无收藏图片，点击上传添加</text>
+  </view>
+
+  <!-- 拼图记录 -->
+  <view class="section">
+    <text class="section-title">拼图记录</text>
+    <view class="record-list" wx:if="{{records.length > 0}}">
+      <view wx:for="{{records}}" wx:key="index" class="record-item">
+        <image src="{{item.imageUrl}}" mode="aspectFill" class="record-img" />
+        <view class="record-info">
+          <text class="record-difficulty">
+            {{item.difficulty === 'easy' ? '简单 3\u00D73' : item.difficulty === 'medium' ? '中等 4\u00D74' : '困难 5\u00D75'}}
+          </text>
+          <text class="record-time">最快: {{formatTime(item.bestTime)}}</text>
+        </view>
+      </view>
+    </view>
+    <text wx:else class="empty-hint">暂无拼图记录，快去开始一局吧</text>
+  </view>
+</view>

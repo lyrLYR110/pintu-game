@@ -1,0 +1,366 @@
+/* room.wxss — 房间大厅样式 */
+
+.container {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+/* 顶部导航 */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background: #667eea;
+  color: #fff;
+}
+
+.nav-left {
+  font-size: 28rpx;
+}
+
+.nav-back {
+  color: #fff;
+}
+
+.nav-title {
+  font-size: 34rpx;
+  font-weight: bold;
+}
+
+.nav-right {
+  font-size: 24rpx;
+}
+
+.room-id-display {
+  background: rgba(255,255,255,0.2);
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  font-family: monospace;
+  letter-spacing: 2rpx;
+}
+
+/* 大厅 */
+.lobby {
+  padding: 60rpx 30rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 40rpx;
+}
+
+.lobby-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.section-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.section-desc {
+  font-size: 26rpx;
+  color: #999;
+  text-align: center;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1rpx;
+  background: #ddd;
+}
+
+.divider-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.join-form {
+  display: flex;
+  gap: 20rpx;
+  width: 100%;
+}
+
+.room-input {
+  flex: 1;
+  padding: 20rpx 30rpx;
+  border: 2rpx solid #ddd;
+  border-radius: 15rpx;
+  font-size: 32rpx;
+  font-family: monospace;
+  letter-spacing: 6rpx;
+  text-align: center;
+  text-transform: uppercase;
+  background: #fff;
+}
+
+.btn {
+  padding: 18rpx 40rpx;
+  background: #667eea;
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+}
+
+.btn-primary {
+  background: #667eea;
+}
+
+.btn-secondary {
+  background: #999;
+}
+
+/* 房间详情 */
+.room-detail {
+  padding: 20rpx 30rpx;
+}
+
+.room-status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 15rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.status-badge {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.status-waiting {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.status-playing {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.status-finished {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.round-progress {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 玩家列表 */
+.player-section {
+  background: #fff;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.player-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+
+.player-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx;
+  border-radius: 15rpx;
+  background: #f8f9fa;
+  min-width: 140rpx;
+  position: relative;
+}
+
+.player-card.player-me {
+  background: #e8eaf6;
+  border: 2rpx solid #667eea;
+}
+
+.player-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: #667eea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10rpx;
+}
+
+.avatar-text {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.player-name {
+  font-size: 24rpx;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+
+.player-status {
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 10rpx;
+}
+
+.player-host {
+  position: absolute;
+  top: 6rpx;
+  left: 6rpx;
+  background: #ff9800;
+  color: #fff;
+  font-size: 18rpx;
+  padding: 2rpx 8rpx;
+  border-radius: 6rpx;
+}
+
+/* 图片上传 */
+.image-upload-section {
+  background: #fff;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.upload-row {
+  display: flex;
+  gap: 20rpx;
+  align-items: center;
+  margin-top: 20rpx;
+}
+
+.upload-preview {
+  width: 120rpx;
+  height: 120rpx;
+  border: 2rpx dashed #ddd;
+  border-radius: 15rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+}
+
+.upload-placeholder {
+  font-size: 50rpx;
+  color: #ccc;
+}
+
+.upload-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.upload-hint {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.upload-desc {
+  font-size: 22rpx;
+  color: #4caf50;
+}
+
+.upload-desc.no-img {
+  color: #f44336;
+}
+
+/* 操作按钮 */
+.room-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+  margin-bottom: 20rpx;
+}
+
+.btn-ready {
+  background: #4caf50;
+}
+
+.btn-start {
+  background: #ff9800;
+}
+
+.btn-waiting {
+  background: #ccc;
+}
+
+.btn-leave {
+  background: #f44336;
+}
+
+/* 轮次进度 */
+.round-section {
+  background: #fff;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.round-dots {
+  display: flex;
+  gap: 15rpx;
+  justify-content: center;
+  margin-top: 20rpx;
+}
+
+.round-dot {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  font-weight: bold;
+}
+
+.dot-done {
+  background: #4caf50;
+  color: #fff;
+}
+
+.dot-active {
+  background: #ff9800;
+  color: #fff;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.dot-pending {
+  background: #e0e0e0;
+  color: #999;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}

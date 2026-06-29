@@ -1,6 +1,6 @@
 {
   "libVersion": "3.16.2",
-  "projectname": "%E6%8B%BC%E5%9B%BE",
+  "projectname": "pintu-app",
   "setting": {
     "urlCheck": true,
     "coverView": true,

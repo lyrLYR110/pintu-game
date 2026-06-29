@@ -18,6 +18,8 @@ Page({
     currentMusicIndex: 0,
     correctCount: 0,
     totalPieces: 0,
+    showMultiplayer: false,
+    joinRoomId: '',
     presetImages: [
       { id: 1, name: '山间小路', url: 'https://picsum.photos/id/1/600/600' },
       { id: 2, name: '湖光山色', url: 'https://picsum.photos/id/28/600/600' },
@@ -444,5 +446,26 @@ Page({
     if (this.audioContext) {
       this.audioContext.destroy()
     }
+  },
+
+  // ========== 多人对战入口 ==========
+
+  toggleMultiplayer() {
+    this.setData({ showMultiplayer: !this.data.showMultiplayer })
+  },
+
+  createRoom() {
+    wx.navigateTo({ url: '/pages/room/room' })
+  },
+
+  joinRoom() {
+    const roomId = this.data.joinRoomId.trim().toUpperCase()
+    if (roomId.length === 6) {
+      wx.navigateTo({ url: `/pages/room/room?roomId=${roomId}` })
+    }
+  },
+
+  onJoinRoomIdInput(e) {
+    this.setData({ joinRoomId: e.detail.value.toUpperCase() })
   }
 })

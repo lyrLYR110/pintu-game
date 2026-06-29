@@ -5,7 +5,7 @@
         <text class="logo-text">🧩</text>
       </view>
       <view class="brand">
-        <text class="brand-title">照片碎片化拼图</text>
+        <text class="brand-title">照片碎片化拼图记忆力挑战</text>
         <text class="brand-subtitle">挑战你的记忆力和观察力</text>
       </view>
     </view>
@@ -82,6 +82,26 @@
         >
           <text class="music-name">{{item.name}}</text>
           <text class="music-artist">{{item.artist}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="multiplayer-toggle" bindtap="toggleMultiplayer">
+        <text class="title">多人对战</text>
+        <text class="toggle-arrow">{{showMultiplayer ? '\u25BC' : '\u25B6'}}</text>
+      </view>
+      <view class="multiplayer-content" wx:if="{{showMultiplayer}}">
+        <button class="btn multiplayer-btn" bindtap="createRoom">创建房间</button>
+        <view class="join-room-area">
+          <input
+            class="room-input"
+            placeholder="输入6位房间号"
+            maxlength="6"
+            value="{{joinRoomId}}"
+            bindinput="onJoinRoomIdInput"
+          />
+          <button class="btn btn-join" bindtap="joinRoom" disabled="{{joinRoomId.length !== 6}}">加入</button>
         </view>
       </view>
     </view>

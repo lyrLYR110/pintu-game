@@ -1,0 +1,136 @@
+<view class="container">
+  <!-- 顶部导航 -->
+  <view class="top-nav">
+    <view class="nav-left" bindtap="goHome">
+      <text class="nav-back">\u2190 首页</text>
+    </view>
+    <text class="nav-title">房间大厅</text>
+    <view class="nav-right">
+      <text class="room-id-display" wx:if="{{roomId}}">{{roomId}}</text>
+    </view>
+  </view>
+
+  <!-- 未加入房间：创建/加入 -->
+  <view class="lobby" wx:if="{{!roomId}}">
+    <view class="lobby-section">
+      <text class="section-title">创建房间</text>
+      <text class="section-desc">创建一个新房间，邀请好友加入对战</text>
+      <button class="btn btn-primary" bindtap="createRoom">创建房间</button>
+    </view>
+
+    <view class="divider">
+      <text class="divider-text">或</text>
+    </view>
+
+    <view class="lobby-section">
+      <text class="section-title">加入房间</text>
+      <text class="section-desc">输入6位房间号加入好友的房间</text>
+      <view class="join-form">
+        <input
+          class="room-input"
+          placeholder="输入6位房间号"
+          maxlength="6"
+          value="{{joinRoomId}}"
+          bindinput="onJoinRoomIdInput"
+        />
+        <button class="btn" bindtap="joinRoom" disabled="{{joinRoomId.length !== 6}}">加入</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 已加入房间：房间详情 -->
+  <view class="room-detail" wx:if="{{roomId}}">
+    <!-- 房间状态栏 -->
+    <view class="room-status-bar">
+      <text class="status-badge status-{{room.status}}">
+        {{room.status === 'waiting' ? '等待中' : room.status === 'playing' ? '游戏中' : '已结束'}}
+      </text>
+      <text class="round-progress" wx:if="{{room.status === 'playing'}}">
+        第 {{room.currentRound + 1}}/{{room.maxRounds}} 轮
+      </text>
+    </view>
+
+    <!-- 玩家列表 -->
+    <view class="player-section">
+      <text class="section-title">玩家列表 ({{room.players.length}}人)</text>
+      <view class="player-grid">
+        <view
+          wx:for="{{room.players}}"
+          wx:key="openid"
+          class="player-card {{item.openid === myOpenid ? 'player-me' : ''}}"
+        >
+          <view class="player-avatar">
+            <text class="avatar-text">{{item.nickName ? item.nickName.charAt(0) : '?'}}</text>
+          </view>
+          <text class="player-name">{{item.nickName || '玩家'}}</text>
+          <text class="player-status status-{{item.ready ? 'ready' : 'not-ready'}}">
+            {{item.ready ? '已准备' : '未准备'}}
+          </text>
+          <text class="player-host" wx:if="{{item.openid === room.hostOpenid}}">房主</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 上传图片区域（等待状态） -->
+    <view class="image-upload-section" wx:if="{{room.status === 'waiting'}}">
+      <text class="section-title">我的对局图片</text>
+      <view class="upload-row">
+        <view class="upload-preview" bindtap="uploadMyImage">
+          <image wx:if="{{myImageUrl}}" src="{{myImageUrl}}" mode="aspectFill" class="preview-img" />
+          <text wx:else class="upload-placeholder">+</text>
+        </view>
+        <view class="upload-info">
+          <text class="upload-hint">点击上传一张图片作为对局用图</text>
+          <text class="upload-desc" wx:if="{{myImageUrl}}">已上传</text>
+          <text class="upload-desc no-img" wx:else>未上传</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="room-actions">
+      <!-- 等待中 -->
+      <view wx:if="{{room.status === 'waiting'}}">
+        <button class="btn btn-ready" bindtap="toggleReady" disabled="{{!myImageUrl}}">
+          <text>{{amIReady ? '取消准备' : '准备'}}</text>
+        </button>
+        <button
+          wx:if="{{isHost && allReady}}"
+          class="btn btn-start"
+          bindtap="startGame"
+        >
+          开始游戏
+        </button>
+        <button wx:if="{{!isHost}}" class="btn btn-waiting" disabled>
+          等待房主开始...
+        </button>
+        <button class="btn btn-leave" bindtap="leaveRoom">离开房间</button>
+      </view>
+
+      <!-- 游戏中 -->
+      <view wx:if="{{room.status === 'playing'}}">
+        <button class="btn btn-primary" bindtap="joinCurrentRound">进入对局</button>
+      </view>
+
+      <!-- 已结束 -->
+      <view wx:if="{{room.status === 'finished'}}">
+        <button class="btn" bindtap="viewResult">查看结果</button>
+        <button class="btn btn-secondary" bindtap="createNewRoom">新建房间</button>
+      </view>
+    </view>
+
+    <!-- 轮次进度（游戏中） -->
+    <view class="round-section" wx:if="{{room.status === 'playing'}}">
+      <text class="section-title">轮次进度</text>
+      <view class="round-dots">
+        <view
+          wx:for="{{room.maxRounds}}"
+          wx:key="index"
+          class="round-dot {{index < room.currentRound ? 'dot-done' : index === room.currentRound ? 'dot-active' : 'dot-pending'}}"
+        >
+          <text>{{index + 1}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
