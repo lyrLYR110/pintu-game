@@ -90,6 +90,9 @@
     .hint-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
     .hint-label { font-size: 26px; color: #666; }
     .hint-value { font-size: 30px; font-weight: 700; color: #f5576c; }
+    .support-btn { position: fixed; bottom: 40px; right: 40px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%); border-radius: 50%; width: 60px; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4); z-index: 50; cursor: pointer; animation: pulse 2s ease-in-out infinite; }
+    .support-icon { font-size: 24px; }
+    .support-text { font-size: 10px; color: #fff; font-weight: 600; line-height: 1; }
   </style>
 </head>
 <body>
@@ -168,6 +171,11 @@
       <div class="start-area">
         <button class="btn start-btn" onclick="startGame()">开始游戏</button>
       </div>
+    </div>
+
+    <div class="support-btn" onclick="supportAuthor()">
+      <span class="support-icon">❤️</span>
+      <span class="support-text">支持作者</span>
     </div>
 
     <div class="game-area hidden" id="gameArea">
@@ -695,6 +703,10 @@
       textarea.select();
       document.execCommand('copy');
       document.body.removeChild(textarea);
+    }
+
+    function supportAuthor() {
+      window.open('https://forum.trae.cn/t/topic/52251?u=u1184602040872736', '_blank');
     }
 
     init();
