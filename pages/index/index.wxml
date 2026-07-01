@@ -43,7 +43,7 @@
     <view class="section">
       <text class="title">选择难度</text>
       <view class="difficulty-options">
-        <view 
+        <view
           class="difficulty-btn {{selectedDifficulty === 'easy' ? 'selected' : ''}}"
           bindtap="selectDifficulty"
           data-difficulty="easy"
@@ -51,7 +51,7 @@
           <text class="difficulty-label">简单</text>
           <text class="difficulty-detail">3×3</text>
         </view>
-        <view 
+        <view
           class="difficulty-btn {{selectedDifficulty === 'medium' ? 'selected' : ''}}"
           bindtap="selectDifficulty"
           data-difficulty="medium"
@@ -59,13 +59,37 @@
           <text class="difficulty-label">中等</text>
           <text class="difficulty-detail">4×4</text>
         </view>
-        <view 
+        <view
           class="difficulty-btn {{selectedDifficulty === 'hard' ? 'selected' : ''}}"
           bindtap="selectDifficulty"
           data-difficulty="hard"
         >
           <text class="difficulty-label">困难</text>
           <text class="difficulty-detail">5×5</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <text class="title">选择模式</text>
+      <view class="mode-options">
+        <view
+          class="mode-btn {{gameMode === 'memory' ? 'selected' : ''}}"
+          bindtap="selectGameMode"
+          data-mode="memory"
+        >
+          <text class="mode-icon">🧠</text>
+          <text class="mode-name">记忆模式</text>
+          <text class="mode-desc">5秒记忆后开始</text>
+        </view>
+        <view
+          class="mode-btn {{gameMode === 'challenge' ? 'selected' : ''}}"
+          bindtap="selectGameMode"
+          data-mode="challenge"
+        >
+          <text class="mode-icon">🔥</text>
+          <text class="mode-name">挑战模式</text>
+          <text class="mode-desc">直接开始·无提示</text>
         </view>
       </view>
     </view>
@@ -96,7 +120,8 @@
         <view class="join-room-area">
           <input
             class="room-input"
-            placeholder="输入6位房间号"
+            placeholder="输入6位数字房间号"
+            type="number"
             maxlength="6"
             value="{{joinRoomId}}"
             bindinput="onJoinRoomIdInput"
@@ -104,6 +129,13 @@
           <button class="btn btn-join" bindtap="joinRoom" disabled="{{joinRoomId.length !== 6}}">加入</button>
         </view>
       </view>
+    </view>
+
+    <view class="share-section">
+      <button class="btn-share-game" open-type="share">
+        <text class="share-game-icon">📤</text>
+        <text class="share-game-text">分享给好友</text>
+      </button>
     </view>
 
     <view class="start-area">
@@ -148,22 +180,40 @@
 
     <view class="puzzle-board-container">
       <view class="puzzle-board">
-        <view 
-          wx:for="{{pieces}}" 
+        <view
+          wx:for="{{pieces}}"
           wx:key="id"
           class="puzzle-piece {{selectedPiece && selectedPiece.id === item.id ? 'selected' : ''}}"
           style="width: {{pieceSize}}rpx; height: {{pieceSize}}rpx; left: {{item.x * pieceSize}}rpx; top: {{item.y * pieceSize}}rpx; background-image: url({{selectedImage}}); background-position: -{{item.correctX * pieceSize}}rpx -{{item.correctY * pieceSize}}rpx; background-size: {{gridSize * pieceSize}}rpx {{gridSize * pieceSize}}rpx; transform: rotate({{item.rotation}}deg);"
           bindtap="selectPiece"
           data-id="{{item.id}}"
         >
-          <view class="piece-marker" wx:if="{{item.isCorrect}}">✓</view>
+          <view class="piece-marker" wx:if="{{item.isCorrect && gameMode === 'memory'}}">✓</view>
         </view>
+      </view>
+    </view>
+
+    <view class="hint-btn" wx:if="{{gameMode === 'challenge' && !showWin}}" bindtap="toggleHint">
+      <text class="hint-btn-icon">💡</text>
+      <text class="hint-btn-text">{{showHint ? '收起' : '提示'}}</text>
+    </view>
+
+    <view class="hint-panel" wx:if="{{showHint && gameMode === 'challenge'}}">
+      <view class="hint-title">当前进度</view>
+      <view class="hint-item">
+        <text class="hint-label">位置正确</text>
+        <text class="hint-value">{{hintPositionCorrect}} / {{totalPieces}}</text>
+      </view>
+      <view class="hint-item">
+        <text class="hint-label">方向正确</text>
+        <text class="hint-value">{{hintRotationCorrect}} / {{totalPieces}}</text>
       </view>
     </view>
 
     <view class="game-info">
       <text class="info-text">点击两个拼图块进行位置调换，点击旋转按钮旋转选中的拼图</text>
-      <text class="correct-count">已完成: {{correctCount}}/{{totalPieces}}</text>
+      <text class="correct-count" wx:if="{{gameMode === 'memory'}}">已完成: {{correctCount}}/{{totalPieces}}</text>
+      <text class="correct-count" wx:if="{{gameMode === 'challenge'}}">点击「提示」查看进度</text>
     </view>
 
     <view class="win-modal" wx:if="{{showWin}}">
@@ -178,6 +228,10 @@
           <text class="rating-comment">{{winResult.comment}}</text>
         </view>
         <view class="win-buttons">
+          <button class="btn btn-share-win" open-type="share">
+            <text class="share-icon">📤</text>
+            <text>分享成绩</text>
+          </button>
           <button class="btn" bindtap="restartGame">
             <text>再来一局</text>
           </button>

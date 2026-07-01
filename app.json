@@ -1,7 +1,6 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/puzzle/puzzle",
     "pages/room/room",
     "pages/profile/profile"
   ],
@@ -20,20 +19,20 @@
       {
         "pagePath": "pages/index/index",
         "text": "拼图",
-        "iconPath": "images/1.jpg",
-        "selectedIconPath": "images/2.jpg"
+        "iconPath": "images/tab-home.png",
+        "selectedIconPath": "images/tab-home-active.png"
       },
       {
         "pagePath": "pages/room/room",
         "text": "对战",
-        "iconPath": "images/2.jpg",
-        "selectedIconPath": "images/3.jpg"
+        "iconPath": "images/tab-versus.png",
+        "selectedIconPath": "images/tab-versus-active.png"
       },
       {
         "pagePath": "pages/profile/profile",
         "text": "我的",
-        "iconPath": "images/3.jpg",
-        "selectedIconPath": "images/1.jpg"
+        "iconPath": "images/tab-me.png",
+        "selectedIconPath": "images/tab-me-active.png"
       }
     ]
   },

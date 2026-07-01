@@ -31,6 +31,12 @@
     .difficulty-btn.selected { border-color: #667eea; background: rgba(102, 126, 234, 0.1); }
     .difficulty-label { font-size: 15px; font-weight: bold; color: #333; display: block; }
     .difficulty-detail { font-size: 12px; color: #999; }
+    .mode-options { display: flex; gap: 12px; margin-top: 15px; }
+    .mode-btn { flex: 1; padding: 15px; border-radius: 12px; border: 2px solid #eee; text-align: center; transition: all 0.3s; }
+    .mode-btn.selected { border-color: #667eea; background: rgba(102, 126, 234, 0.1); }
+    .mode-icon { font-size: 24px; display: block; margin-bottom: 5px; }
+    .mode-name { font-size: 14px; font-weight: bold; color: #333; display: block; }
+    .mode-desc { font-size: 11px; color: #999; }
     .music-options { display: flex; flex-direction: column; gap: 10px; }
     .music-item { padding: 12px 15px; border-radius: 10px; border: 2px solid #eee; transition: all 0.3s; }
     .music-item.selected { border-color: #667eea; background: rgba(102, 126, 234, 0.1); }
@@ -40,6 +46,8 @@
     .start-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
     .btn-disabled { opacity: 0.5; }
     .btn-secondary { background: #f5f5f5; color: #666; }
+    .btn-share-win { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+    .btn-share-game { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .timer { display: flex; align-items: center; gap: 8px; background: white; padding: 10px 15px; border-radius: 20px; }
     .timer-icon { font-size: 18px; }
@@ -73,6 +81,15 @@
     .hidden { display: none; }
     input[type="file"] { display: none; }
     .upload-label { cursor: pointer; }
+    .share-section { padding: 20px; display: flex; justify-content: center; }
+    .hint-btn { position: fixed; bottom: 40px; right: 40px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; width: 100px; height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(245, 87, 108, 0.4); z-index: 60; }
+    .hint-btn-icon { font-size: 36px; line-height: 1; }
+    .hint-btn-text { font-size: 20px; color: #fff; font-weight: 600; line-height: 1; }
+    .hint-panel { position: fixed; bottom: 160px; right: 30px; background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); z-index: 70; min-width: 280px; }
+    .hint-title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 16px; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 12px; }
+    .hint-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+    .hint-label { font-size: 26px; color: #666; }
+    .hint-value { font-size: 30px; font-weight: 700; color: #f5576c; }
   </style>
 </head>
 <body>
@@ -121,8 +138,31 @@
       </div>
 
       <div class="section">
+        <span class="title">选择模式</span>
+        <div class="mode-options">
+          <div class="mode-btn selected" onclick="selectGameMode('memory')">
+            <span class="mode-icon">🧠</span>
+            <span class="mode-name">记忆模式</span>
+            <span class="mode-desc">5秒记忆后开始</span>
+          </div>
+          <div class="mode-btn" onclick="selectGameMode('challenge')">
+            <span class="mode-icon">🔥</span>
+            <span class="mode-name">挑战模式</span>
+            <span class="mode-desc">直接开始·无提示</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
         <span class="title">选择背景音乐</span>
         <div class="music-options" id="musicOptions"></div>
+      </div>
+
+      <div class="share-section">
+        <button class="btn btn-share-game" onclick="shareGame()">
+          <span>📤</span>
+          <span>分享给好友</span>
+        </button>
       </div>
 
       <div class="start-area">
@@ -159,6 +199,23 @@
         <div class="puzzle-board" id="puzzleBoard"></div>
       </div>
 
+      <div class="hint-btn hidden" id="hintBtn" onclick="toggleHint()">
+        <span class="hint-btn-icon">💡</span>
+        <span class="hint-btn-text" id="hintBtnText">提示</span>
+      </div>
+
+      <div class="hint-panel hidden" id="hintPanel">
+        <div class="hint-title">当前进度</div>
+        <div class="hint-item">
+          <span class="hint-label">位置正确</span>
+          <span class="hint-value" id="hintPosition">0 / 9</span>
+        </div>
+        <div class="hint-item">
+          <span class="hint-label">方向正确</span>
+          <span class="hint-value" id="hintRotation">0 / 9</span>
+        </div>
+      </div>
+
       <div class="game-info">
         <span class="info-text">点击两个拼图块进行位置调换，点击旋转按钮旋转选中的拼图</span>
         <span class="correct-count" id="correctCount">已完成: 0/9</span>
@@ -175,6 +232,10 @@
           <span class="rating-comment" id="ratingComment">太棒了！</span>
         </div>
         <div class="win-buttons">
+          <button class="btn btn-share-win" onclick="shareResult()">
+            <span>📤</span>
+            <span>分享成绩</span>
+          </button>
           <button class="btn" onclick="restartGame()">再来一局</button>
           <button class="btn btn-secondary" onclick="goHome()">返回首页</button>
         </div>
@@ -210,6 +271,7 @@
 
     let selectedImage = presetImages[0].url;
     let selectedDifficulty = 'easy';
+    let gameMode = 'memory';
     let currentMusicIndex = 0;
     let isMusicPlaying = false;
     let gameStarted = false;
@@ -222,6 +284,7 @@
     let timerInterval = null;
     let correctCount = 0;
     let totalPieces = 0;
+    let showHint = false;
 
     function init() {
       renderPresetImages();
@@ -259,6 +322,12 @@
       document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('selected'));
       event.target.closest('.difficulty-btn').classList.add('selected');
       checkStartButton();
+    }
+
+    function selectGameMode(mode) {
+      gameMode = mode;
+      document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('selected'));
+      event.target.closest('.mode-btn').classList.add('selected');
     }
 
     function selectMusic(index) {
@@ -323,7 +392,14 @@
       timer = 0;
       
       updateTimer();
-      showMemory();
+      
+      if (gameMode === 'memory') {
+        showMemory();
+      } else {
+        initPuzzle();
+        startTimer();
+        document.getElementById('hintBtn').classList.remove('hidden');
+      }
     }
 
     function showMemory() {
@@ -406,14 +482,15 @@
           "
           onclick="selectPiece('${piece.id}')"
         >
-          ${piece.isCorrect ? '<div class="piece-marker">✓</div>' : ''}
+          ${piece.isCorrect && gameMode === 'memory' ? '<div class="piece-marker">✓</div>' : ''}
         </div>
       `).join('');
     }
 
     function selectPiece(id) {
       const piece = pieces.find(p => p.id === id);
-      if (!piece || piece.isCorrect) return;
+      if (!piece) return;
+      if (piece.isCorrect && gameMode === 'memory') return;
       
       document.getElementById('rotateControls').classList.remove('hidden');
       
@@ -442,38 +519,67 @@
     }
 
     function rotatePieceLeft() {
-      if (selectedPiece && !selectedPiece.isCorrect) {
-        selectedPiece.rotation = (selectedPiece.rotation - 90 + 360) % 360;
-        renderPuzzle();
-        checkWin();
-      }
+      if (!selectedPiece) return;
+      if (selectedPiece.isCorrect && gameMode === 'memory') return;
+      
+      selectedPiece.rotation = (selectedPiece.rotation - 90 + 360) % 360;
+      renderPuzzle();
+      checkWin();
     }
 
     function rotatePieceRight() {
-      if (selectedPiece && !selectedPiece.isCorrect) {
-        selectedPiece.rotation = (selectedPiece.rotation + 90) % 360;
-        renderPuzzle();
-        checkWin();
-      }
+      if (!selectedPiece) return;
+      if (selectedPiece.isCorrect && gameMode === 'memory') return;
+      
+      selectedPiece.rotation = (selectedPiece.rotation + 90) % 360;
+      renderPuzzle();
+      checkWin();
     }
 
     function checkWin() {
       correctCount = 0;
+      let positionCorrect = 0;
+      let rotationCorrect = 0;
+      
       pieces.forEach(piece => {
-        const isCorrect = piece.x === piece.correctX && piece.y === piece.correctY && piece.rotation === 0;
+        const isPositionCorrect = piece.x === piece.correctX && piece.y === piece.correctY;
+        const isRotationCorrect = piece.rotation === 0;
+        const isCorrect = isPositionCorrect && isRotationCorrect;
+        
         piece.isCorrect = isCorrect;
         if (isCorrect) correctCount++;
+        if (isPositionCorrect) positionCorrect++;
+        if (isRotationCorrect) rotationCorrect++;
       });
       
       updateCorrectCount();
+      
+      if (gameMode === 'challenge') {
+        document.getElementById('hintPosition').innerHTML = `${positionCorrect} / ${totalPieces}`;
+        document.getElementById('hintRotation').innerHTML = `${rotationCorrect} / ${totalPieces}`;
+      }
       
       if (correctCount === totalPieces) {
         winGame();
       }
     }
 
+    function toggleHint() {
+      showHint = !showHint;
+      const panel = document.getElementById('hintPanel');
+      const btnText = document.getElementById('hintBtnText');
+      
+      if (showHint) {
+        panel.classList.remove('hidden');
+        btnText.innerHTML = '收起';
+      } else {
+        panel.classList.add('hidden');
+        btnText.innerHTML = '提示';
+      }
+    }
+
     function updateCorrectCount() {
-      document.getElementById('correctCount').innerHTML = `已完成: ${correctCount}/${totalPieces}`;
+      document.getElementById('correctCount').innerHTML = gameMode === 'memory' ? `已完成: ${correctCount}/${totalPieces}` : '点击提示查看进度';
     }
 
     function startTimer() {
@@ -505,6 +611,9 @@
       document.getElementById('winTime').innerHTML = `用时: ${formatTime(timer)}`;
       document.getElementById('ratingStars').innerHTML = '⭐'.repeat(result.stars) + '☆'.repeat(5 - result.stars);
       document.getElementById('ratingComment').innerHTML = result.comment;
+      
+      document.getElementById('hintBtn').classList.add('hidden');
+      document.getElementById('hintPanel').classList.add('hidden');
       
       document.getElementById('winModal').classList.remove('hidden');
     }
@@ -551,6 +660,41 @@
       stopTimer();
       timer = 0;
       updateTimer();
+    }
+
+    function shareGame() {
+      const title = '照片碎片化拼图 - 挑战你的记忆力';
+      const url = window.location.href;
+      
+      if (navigator.share) {
+        navigator.share({ title, text: title, url }).catch(() => {});
+      } else {
+        copyToClipboard(url);
+        alert('链接已复制到剪贴板！');
+      }
+    }
+
+    function shareResult() {
+      const diffText = selectedDifficulty === 'easy' ? '简单3×3' : selectedDifficulty === 'medium' ? '中等4×4' : '困难5×5';
+      const modeText = gameMode === 'memory' ? '记忆模式' : '挑战模式';
+      const title = `我用${formatTime(timer)}完成了${diffText}${modeText}拼图！来挑战我吧~`;
+      const url = window.location.href;
+      
+      if (navigator.share) {
+        navigator.share({ title, text: title, url }).catch(() => {});
+      } else {
+        copyToClipboard(url);
+        alert('链接已复制到剪贴板！');
+      }
+    }
+
+    function copyToClipboard(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
     }
 
     init();

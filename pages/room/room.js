@@ -68,11 +68,11 @@ Page({
 
   async joinRoom() {
     const roomId = this.data.joinRoomId.trim()
-    if (roomId.length !== 6) {
-      wx.showToast({ title: '请输入6位房间号', icon: 'none' })
+    if (!/^\d{6}$/.test(roomId)) {
+      wx.showToast({ title: '请输入6位数字房间号', icon: 'none' })
       return
     }
-    await this.joinExistingRoom(roomId.toUpperCase())
+    await this.joinExistingRoom(roomId)
   },
 
   async joinExistingRoom(roomId) {
@@ -247,7 +247,8 @@ Page({
   // ========== 输入房间号 ==========
 
   onJoinRoomIdInput(e) {
-    this.setData({ joinRoomId: e.detail.value.toUpperCase() })
+    const val = e.detail.value.replace(/\D/g, '').slice(0, 6)
+    this.setData({ joinRoomId: val })
   },
 
   // ========== 轮询监听房间变化 ==========
@@ -312,5 +313,23 @@ Page({
       this.watcher.close()
     }
     wx.reLaunch({ url: '/pages/index/index' })
+  },
+
+  // ========== 分享功能 ==========
+
+  onShareAppMessage() {
+    const roomId = this.data.roomId
+    if (roomId) {
+      return {
+        title: `快来加入我的拼图对战房间！房间号：${roomId}`,
+        path: `/pages/room/room?roomId=${roomId}`,
+        imageUrl: this.data.myImageUrl || '/images/share-room.png'
+      }
+    }
+    return {
+      title: '照片碎片化拼图 - 挑战你的记忆力',
+      path: '/pages/index/index',
+      imageUrl: '/images/share-game.png'
+    }
   }
 })

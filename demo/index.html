@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>照片碎片化拼图 - Photo Fragment Puzzle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 粒子画布背景 -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- 加载屏幕 -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">🧩</div>
+            <h1 class="loading-title">照片碎片化拼图</h1>
+            <p class="loading-contest-badge">TRAE AI 创造力大赛 参赛作品</p>
+            <div class="loading-bar-container">
+                <div class="loading-bar" id="loading-bar"></div>
+            </div>
+            <p class="loading-text" id="loading-text">正在加载资源...</p>
+        </div>
+    </div>
+
+    <!-- 应用主容器 -->
+    <div id="app" class="app hidden">
+
+        <!-- 顶部导航栏 -->
+        <nav class="nav-bar">
+            <button class="nav-btn nav-back" id="btn-back" title="返回">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <span class="nav-title" id="nav-title">照片碎片化拼图</span>
+            <button class="nav-btn nav-music" id="btn-music" title="音乐">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18V5l12-2v13"/>
+                    <circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                </svg>
+            </button>
+        </nav>
+
+        <!-- ========== 首页屏幕 ========== -->
+        <section class="screen" id="screen-home">
+            <div class="hero-banner">
+                <h1 class="hero-title">🧩 照片碎片化拼图</h1>
+                <p class="hero-subtitle">挑战你的记忆力和观察力</p>
+                <p class="hero-contest">CET游戏团 × TRAE AI创造力大赛</p>
+            </div>
+            <div class="screen-content">
+                <h2 class="section-title">选择图片</h2>
+
+                <!-- 预设图片网格 -->
+                <div class="preset-images" id="preset-images">
+                    <!-- 由 JS 动态生成 -->
+                </div>
+
+                <!-- 上传区域 -->
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-placeholder" id="upload-placeholder">
+                        <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="4" y="8" width="40" height="32" rx="4"/>
+                            <circle cx="16" cy="22" r="4"/>
+                            <path d="M4 34l10-10 8 8 6-6 16 16"/>
+                        </svg>
+                        <p>点击或拖拽上传图片</p>
+                    </div>
+                    <div class="upload-preview hidden" id="upload-preview">
+                        <img id="upload-preview-img" src="" alt="上传预览">
+                        <button class="upload-remove-btn" id="upload-remove-btn" title="移除">&times;</button>
+                    </div>
+                    <input type="file" id="file-input" accept="image/*" hidden>
+                </div>
+
+                <h2 class="section-title">选择难度</h2>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn active" data-difficulty="easy">简单 3×3</button>
+                    <button class="difficulty-btn" data-difficulty="medium">中等 4×4</button>
+                    <button class="difficulty-btn" data-difficulty="hard">困难 5×5</button>
+                </div>
+
+                <!-- 最佳记录 -->
+                <div class="ranking-card" id="ranking-card">
+                    <h2 class="section-title">🏆 最佳记录</h2>
+                    <div id="ranking-list" class="ranking-list">
+                        <p class="ranking-empty">暂无记录，开始游戏创造你的纪录吧！</p>
+                    </div>
+                </div>
+
+                <!-- 游戏说明 -->
+                <div class="help-card">
+                    <button class="help-toggle" id="btn-help-toggle">
+                        <span>❓ 游戏说明</span>
+                        <span class="help-arrow" id="help-arrow">▼</span>
+                    </button>
+                    <div class="help-content hidden" id="help-content">
+                        <div class="help-item">
+                            <span class="help-num">1</span>
+                            <span>选择一张你喜欢的图片（预设或上传）</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-num">2</span>
+                            <span>选择难度，图片会被切割成碎片并打乱</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-num">3</span>
+                            <span>记住原图！记忆时间结束后拼图开始</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-num">4</span>
+                            <span>点击两个碎片交换位置，选中后可用旋转按钮调整角度</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-num">5</span>
+                            <span>所有碎片回到正确位置且角度正确即为胜利！</span>
+                        </div>
+                        <div class="help-tip">💡 提示：善用旋转按钮和参考图功能，先放边缘碎片效率更高</div>
+                    </div>
+                </div>
+
+                <button class="btn-primary btn-start" id="btn-start">开始游戏</button>
+            </div>
+        </section>
+
+        <!-- ========== 记忆倒计时屏幕 ========== -->
+        <section class="screen hidden" id="screen-memory">
+            <div class="screen-content memory-content">
+                <p class="memory-hint">记住这张图片！</p>
+                <div class="memory-image-container">
+                    <img id="memory-image" src="" alt="记忆图片">
+                </div>
+                <div class="memory-countdown-display">
+                    <span class="memory-countdown-num" id="memory-countdown">5</span>
+                </div>
+                <div class="memory-progress-bar">
+                    <div class="memory-progress-fill" id="memory-progress"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 游戏屏幕 ========== -->
+        <section class="screen hidden" id="screen-game">
+            <div class="game-header">
+                <div class="game-stat">
+                    <span class="game-stat-label">⏱</span>
+                    <span class="game-stat-value" id="timer-display">00:00</span>
+                </div>
+                <div class="game-stat">
+                    <span class="game-stat-label">✅</span>
+                    <span class="game-stat-value" id="progress-text">已完成: 0/9</span>
+                </div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+
+            <div class="puzzle-board-wrapper">
+                <div class="puzzle-board" id="puzzle-board">
+                    <!-- 由 JS 动态生成拼图碎片 -->
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button class="control-btn" id="btn-hint" title="提示（高亮一个正确位置的碎片）">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 4 12.9V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.1A7 7 0 0 1 12 2z"/>
+                    </svg>
+                    <span>提示</span>
+                </button>
+                <button class="control-btn" id="btn-undo" title="撤销上一步操作">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 10h10a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H8"/>
+                        <path d="M3 10l4-4M3 10l4 4"/>
+                    </svg>
+                    <span>撤销</span>
+                </button>
+                <button class="control-btn" id="btn-rotate-left" title="逆时针旋转">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 4v6h6"/>
+                        <path d="M3.51 15a9 9 0 105.64-12.36L1 10"/>
+                    </svg>
+                    <span>逆时针</span>
+                </button>
+                <button class="control-btn" id="btn-ref-toggle" title="查看原图">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <path d="M21 15l-5-5L5 21"/>
+                    </svg>
+                    <span>参考图</span>
+                </button>
+                <button class="control-btn" id="btn-rotate-right" title="顺时针旋转">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6"/>
+                        <path d="M20.49 15a9 9 0 11-5.64-12.36L23 10"/>
+                    </svg>
+                    <span>顺时针</span>
+                </button>
+            </div>
+
+            <!-- 参考图浮动面板 -->
+            <div class="ref-panel hidden" id="ref-panel">
+                <img id="ref-panel-img" src="" alt="参考图">
+                <p class="ref-panel-label">参考图片（点击关闭）</p>
+            </div>
+        </section>
+
+        <!-- ========== 胜利屏幕 ========== -->
+        <section class="screen hidden" id="screen-win">
+            <div class="screen-content win-content">
+                <div class="win-emoji" id="win-emoji">🏆</div>
+                <h2 class="win-title" id="win-title">太厉害了！</h2>
+                <div class="win-stars" id="win-stars"></div>
+                <p class="win-comment" id="win-comment">你是拼图大师！</p>
+                <div class="win-stats">
+                    <div class="win-stat-item">
+                        <span class="win-stat-label">用时</span>
+                        <span class="win-stat-value" id="win-time">00:00</span>
+                    </div>
+                    <div class="win-stat-item">
+                        <span class="win-stat-label">难度</span>
+                        <span class="win-stat-value" id="win-difficulty">简单 3×3</span>
+                    </div>
+                </div>
+                <div class="win-image-container">
+                    <img id="win-image" src="" alt="完成图片">
+                </div>
+                <div class="win-buttons">
+                    <button class="btn-primary" id="btn-restart">再来一局</button>
+                    <button class="btn-secondary" id="btn-win-home">返回首页</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast 通知容器 -->
+    <div id="toast-container"></div>
+
+    <div class="confetti-container" id="confetti-container"></div>
+
+    <script src="game.js"></script>
+</body>
+</html>

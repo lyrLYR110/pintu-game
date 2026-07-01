@@ -1,0 +1,2012 @@
+/* ============================================================
+   照片碎片化拼图 (Photo Fragment Puzzle) - Demo 样式表
+   Design: Modern dark-purple gradient gaming aesthetic
+   Author: TRAE AI Creativity Contest
+   ============================================================ */
+
+/* ============================================================
+   1. GLOBAL RESET & BASE STYLES
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 50%, #24243e 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  margin: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+::selection {
+  background-color: #667eea;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #667eea;
+  color: #ffffff;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  color: inherit;
+}
+
+input {
+  font-family: inherit;
+  border: none;
+  outline: none;
+  background: none;
+  color: inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* ============================================================
+   2. APP CONTAINER
+   ============================================================ */
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  padding: 0 16px;
+}
+
+/* ============================================================
+   3. LOADING SCREEN
+   ============================================================ */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 50%, #24243e 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loading-screen.loaded {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-screen.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.loading-logo {
+  font-size: 64px;
+  line-height: 1;
+  animation: pulse 1.5s ease-in-out infinite;
+  margin-bottom: 16px;
+}
+
+.loading-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 32px;
+  text-shadow: 0 2px 10px rgba(102, 126, 234, 0.5);
+}
+
+.loading-bar {
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+  animation: loadFill 2s ease forwards;
+}
+
+/* ============================================================
+   4. TOP NAV BAR
+   ============================================================ */
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: rgba(15, 12, 41, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  z-index: 100;
+  transition: background 0.3s ease;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.nav-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 16px rgba(102, 126, 234, 0.4);
+  transform: scale(1.05);
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+}
+
+.nav-btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: transparent;
+}
+
+/* ============================================================
+   5. SCREEN SYSTEM
+   ============================================================ */
+.screen {
+  display: none;
+  opacity: 0;
+  transform: translateY(8px);
+  padding-top: 56px;
+  padding-bottom: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+}
+
+.screen.active {
+  display: block;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   6. HERO BANNER
+   ============================================================ */
+.hero-banner {
+  position: relative;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 16px;
+  padding: 32px 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+}
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   7. GAME CARDS
+   ============================================================ */
+.card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.card-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.card-description {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   8. PRESET IMAGE GRID
+   ============================================================ */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.image-grid-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.image-grid-item:hover {
+  transform: scale(1.03);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.image-grid-item.selected {
+  border-color: #FFD700;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.35),
+              0 4px 12px rgba(255, 215, 0, 0.2);
+}
+
+.image-grid-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.image-grid-item .image-name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 4px 6px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  pointer-events: none;
+}
+
+/* ============================================================
+   9. UPLOAD AREA
+   ============================================================ */
+.upload-area {
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
+}
+
+.upload-area:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.upload-area.drag-over {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.08);
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.15);
+}
+
+.upload-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.upload-text {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4px;
+}
+
+.upload-hint {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.upload-preview {
+  position: relative;
+  display: inline-block;
+  margin-top: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.upload-preview img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.upload-preview .remove-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #FF5252;
+  color: #ffffff;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(255, 82, 82, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.upload-preview .remove-btn:hover {
+  transform: scale(1.15);
+}
+
+/* ============================================================
+   10. DIFFICULTY BUTTONS
+   ============================================================ */
+.difficulty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.difficulty-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 14px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.difficulty-btn:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.difficulty-btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+}
+
+.difficulty-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.difficulty-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.difficulty-desc {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.3;
+}
+
+.difficulty-btn.active .difficulty-desc {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ============================================================
+   11. START BUTTON
+   ============================================================ */
+.start-btn {
+  width: 100%;
+  height: 56px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 16px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 6px 24px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.start-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.5s ease;
+}
+
+.start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.55);
+}
+
+.start-btn:hover::before {
+  left: 100%;
+}
+
+.start-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
+}
+
+.start-btn-arrow {
+  font-size: 20px;
+  animation: float 2s ease-in-out infinite;
+  line-height: 1;
+}
+
+.start-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ============================================================
+   12. MEMORY SCREEN
+   ============================================================ */
+.memory-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 12, 41, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.memory-screen.active {
+  display: flex;
+}
+
+.memory-content {
+  text-align: center;
+  animation: slideUp 0.5s ease;
+}
+
+.memory-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #FFD700;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+}
+
+.memory-image {
+  max-width: 280px;
+  max-height: 280px;
+  width: 70vmin;
+  height: 70vmin;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+              0 0 40px rgba(102, 126, 234, 0.15);
+  margin-bottom: 16px;
+}
+
+.memory-countdown {
+  font-size: 72px;
+  font-weight: 800;
+  color: #FFD700;
+  line-height: 1;
+  animation: pulse 1s ease-in-out infinite;
+  text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+.memory-progress {
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.memory-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #FFD700);
+  border-radius: 2px;
+  transition: width 0.3s linear;
+}
+
+.memory-hint {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 8px;
+}
+
+/* ============================================================
+   13. GAME SCREEN
+   ============================================================ */
+.game-screen {
+  padding-top: 56px;
+}
+
+.game-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  margin-bottom: 12px;
+}
+
+.game-timer {
+  font-size: 24px;
+  font-weight: 700;
+  color: #FFD700;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.game-timer-icon {
+  font-size: 20px;
+}
+
+.game-progress-wrapper {
+  flex: 1;
+  margin: 0 16px;
+}
+
+.game-progress-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.game-progress-text {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.game-round {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.game-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.game-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.game-stats {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================================
+   14. ROTATE CONTROLS
+   ============================================================ */
+.rotate-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.rotate-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.rotate-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 16px rgba(102, 126, 234, 0.35);
+  border-color: rgba(102, 126, 234, 0.4);
+}
+
+.rotate-btn:active {
+  transform: scale(0.9);
+}
+
+.rotate-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+/* ============================================================
+   15. PUZZLE BOARD (CRITICAL)
+   ============================================================ */
+.puzzle-board {
+  display: grid;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 4px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.puzzle-board-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+  margin-bottom: 12px;
+}
+
+.puzzle-board-wrapper .puzzle-board {
+  width: 100%;
+  max-width: 340px;
+}
+
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.control-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.control-btn:hover {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.4);
+  color: #ffffff;
+}
+
+.control-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto 16px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.ref-panel {
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  z-index: 50;
+  background: rgba(15, 12, 41, 0.9);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 12px;
+  max-width: 200px;
+  animation: fadeIn 0.3s ease;
+}
+
+.ref-panel img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.ref-panel-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.game-stat-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFD700;
+}
+
+.game-stat-label {
+  margin-right: 4px;
+}
+
+.puzzle-piece {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: transform 0.3s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+.puzzle-piece:hover:not(.correct) {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.puzzle-piece.selected {
+  border-color: #FFD700;
+  transform: scale(1.05);
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.4),
+              0 4px 12px rgba(255, 215, 0, 0.2);
+  z-index: 2;
+}
+
+.puzzle-piece.correct {
+  border-color: #00E676;
+  box-shadow: 0 0 12px rgba(0, 230, 118, 0.25);
+}
+
+.puzzle-piece.swapping {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+/* Rotation states */
+.puzzle-piece[data-rotation="0"] {
+  transform: rotate(0deg);
+}
+
+.puzzle-piece[data-rotation="90"] {
+  transform: rotate(90deg);
+}
+
+.puzzle-piece[data-rotation="180"] {
+  transform: rotate(180deg);
+}
+
+.puzzle-piece[data-rotation="270"] {
+  transform: rotate(270deg);
+}
+
+/* Selected + rotated */
+.puzzle-piece.selected[data-rotation="0"] {
+  transform: rotate(0deg) scale(1.05);
+}
+
+.puzzle-piece.selected[data-rotation="90"] {
+  transform: rotate(90deg) scale(1.05);
+}
+
+.puzzle-piece.selected[data-rotation="180"] {
+  transform: rotate(180deg) scale(1.05);
+}
+
+.puzzle-piece.selected[data-rotation="270"] {
+  transform: rotate(270deg) scale(1.05);
+}
+
+/* ============================================================
+   16. WIN SCREEN
+   ============================================================ */
+.win-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 12, 41, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 20px;
+}
+
+.win-screen.active {
+  display: flex;
+}
+
+.win-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 32px 28px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.win-emoji {
+  font-size: 64px;
+  line-height: 1;
+  margin-bottom: 12px;
+  animation: bounceIn 0.8s ease;
+  display: block;
+}
+
+.win-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #FFD700;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 12px rgba(255, 215, 0, 0.35);
+}
+
+.win-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 20px;
+}
+
+.win-stars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.win-star {
+  font-size: 32px;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.win-star.filled {
+  color: #FFD700;
+  text-shadow: 0 0 16px rgba(255, 215, 0, 0.5);
+}
+
+.win-star.empty {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.win-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.win-stat-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.win-stat-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.win-stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.win-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.win-btn-primary {
+  width: 100%;
+  height: 48px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 14px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.win-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(102, 126, 234, 0.45);
+}
+
+.win-btn-secondary {
+  width: 100%;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.win-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================================
+   17. REFERENCE IMAGE TOGGLE
+   ============================================================ */
+.reference-toggle {
+  position: fixed;
+  bottom: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0));
+  right: 16px;
+  z-index: 150;
+}
+
+.reference-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.reference-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: scale(1.05);
+}
+
+.reference-btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: transparent;
+}
+
+.reference-panel {
+  position: absolute;
+  bottom: 52px;
+  right: 0;
+  width: 200px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 10px;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px) scale(0.95);
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.reference-panel.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.reference-panel img {
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+}
+
+.reference-panel-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding-top: 6px;
+}
+
+/* ============================================================
+   18. PARTICLES CANVAS
+   ============================================================ */
+.particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ============================================================
+   19. GAME HINT BAR
+   ============================================================ */
+.hint-bar {
+  position: fixed;
+  bottom: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 150;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.4s ease;
+  transition: opacity 0.3s ease;
+}
+
+.hint-bar.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   20. SECTION SPACERS & UTILITY CLASSES
+   ============================================================ */
+.section-spacer {
+  height: 12px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-gold {
+  color: #FFD700;
+}
+
+.text-green {
+  color: #00E676;
+}
+
+.text-coral {
+  color: #FF5252;
+}
+
+.text-amber {
+  color: #FFC107;
+}
+
+.text-secondary {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.text-tertiary {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ============================================================
+   21. SCROLLBAR STYLING
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ============================================================
+   22. ANIMATIONS & KEYFRAMES
+   ============================================================ */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes loadFill {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 70%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes countPulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   23. ACCESSIBILITY - REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .loading-screen {
+    transition: none;
+  }
+
+  .loading-bar-fill {
+    animation: none;
+    width: 100%;
+  }
+
+  .puzzle-piece {
+    transition: none;
+  }
+
+  .screen {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .start-btn-arrow {
+    animation: none;
+  }
+
+  .memory-countdown {
+    animation: none;
+  }
+
+  .win-card {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   24. RESPONSIVE - MOBILE FIRST (375px primary target)
+   ============================================================ */
+@media (max-width: 375px) {
+  .app {
+    padding: 0 12px;
+  }
+
+  .hero-banner {
+    padding: 24px 16px;
+  }
+
+  .hero-title {
+    font-size: 20px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .difficulty-grid {
+    gap: 8px;
+  }
+
+  .difficulty-btn {
+    padding: 10px 6px;
+  }
+
+  .image-grid {
+    gap: 8px;
+  }
+
+  .puzzle-board {
+    padding: 3px;
+    gap: 1px;
+  }
+
+  .memory-countdown {
+    font-size: 56px;
+  }
+
+  .memory-image {
+    max-width: 220px;
+  }
+
+  .win-card {
+    padding: 24px 20px;
+  }
+
+  .win-title {
+    font-size: 24px;
+  }
+
+  .reference-panel {
+    width: 160px;
+  }
+}
+
+@media (min-width: 481px) {
+  .nav-bar {
+    justify-content: center;
+  }
+
+  .nav-bar > * {
+    max-width: 480px;
+  }
+}
+
+/* ============================================================
+   25. LANDSCAPE ORIENTATION ADJUSTMENT
+   ============================================================ */
+@media (orientation: landscape) and (max-height: 500px) {
+  .memory-image {
+    max-width: 180px;
+    max-height: 180px;
+    width: 30vh;
+    height: 30vh;
+  }
+
+  .memory-countdown {
+    font-size: 48px;
+    margin: -8px 0;
+  }
+
+  .win-card {
+    padding: 20px 24px;
+    max-width: 320px;
+  }
+
+  .win-emoji {
+    font-size: 48px;
+    margin-bottom: 8px;
+  }
+
+  .hero-banner {
+    padding: 20px 24px;
+  }
+}
+
+/* ============================================================
+   26. GAME OVERLAY EFFECTS
+   ============================================================ */
+.game-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.game-overlay.active {
+  display: flex;
+}
+
+.game-overlay-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================================
+   27. TOAST NOTIFICATION
+   ============================================================ */
+.toast {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #ffffff;
+  z-index: 500;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  max-width: 320px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.success {
+  border-color: rgba(0, 230, 118, 0.3);
+}
+
+.toast.error {
+  border-color: rgba(255, 82, 82, 0.3);
+}
+
+.toast.warning {
+  border-color: rgba(255, 193, 7, 0.3);
+}
+
+/* ============================================================
+   28. CONFETTI / CELEBRATION OVERLAY
+   ============================================================ */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 400;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: confettiFall 3s ease forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    opacity: 1;
+    transform: translateY(-20px) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100vh) rotate(720deg);
+  }
+}
+
+/* ============================================================
+   29. BACK BUTTON
+   ============================================================ */
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  transition: color 0.2s ease;
+}
+
+.back-btn:hover {
+  color: #ffffff;
+}
+
+.back-btn-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* ============================================================
+   30. COMPLETE IMAGE REVEAL (After win)
+   ============================================================ */
+.complete-reveal {
+  animation: fadeIn 0.8s ease;
+  margin-bottom: 16px;
+}
+
+.complete-reveal img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.complete-label {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 8px;
+}
+
+/* ============================================================
+   31. HERO BANNER (Home screen)
+   ============================================================ */
+.hero-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 28px 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.hero-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.hero-contest {
+  display: inline-block;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.15);
+  padding: 4px 12px;
+  border-radius: 20px;
+  position: relative;
+}
+
+/* ============================================================
+   32. CONTEST BADGE (Loading screen)
+   ============================================================ */
+.loading-contest-badge {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+}
+
+/* ============================================================
+   33. RANKING CARD
+   ============================================================ */
+.ranking-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ranking-empty {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+  padding: 16px 0;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ranking-medal {
+  font-size: 18px;
+  min-width: 30px;
+  text-align: center;
+}
+
+.ranking-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ranking-diff {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ranking-stars {
+  font-size: 11px;
+  line-height: 1;
+}
+
+.ranking-time {
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFD700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   34. HELP / HOW-TO-PLAY CARD
+   ============================================================ */
+.help-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.help-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.help-toggle:hover {
+  opacity: 0.85;
+}
+
+.help-arrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.help-content {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: slideDown 0.3s ease;
+}
+
+.help-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.5;
+}
+
+.help-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.help-tip {
+  margin-top: 4px;
+  padding: 10px 14px;
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.2);
+  border-radius: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   35. HINT HIGHLIGHT ANIMATION
+   ============================================================ */
+.puzzle-piece.hint-highlight {
+  animation: hintGlow 0.5s ease infinite alternate;
+  border-color: #FFD700 !important;
+  z-index: 2;
+}
+
+@keyframes hintGlow {
+  from {
+    box-shadow: 0 0 4px rgba(255, 215, 0, 0.3);
+  }
+  to {
+    box-shadow: 0 0 16px rgba(255, 215, 0, 0.6), 0 0 32px rgba(255, 215, 0, 0.3);
+  }
+}
+
+/* ============================================================
+   END OF STYLESHEET
+   ============================================================ */

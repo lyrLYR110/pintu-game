@@ -143,5 +143,15 @@ Page({
 
   goHome() {
     wx.reLaunch({ url: '/pages/index/index' })
+  },
+
+  // ========== 分享功能 ==========
+
+  onShareAppMessage() {
+    return {
+      title: '照片碎片化拼图 - 挑战你的记忆力',
+      path: '/pages/index/index',
+      imageUrl: '/images/share-game.png'
+    }
   }
 })

@@ -41,4 +41,10 @@
     </view>
     <text wx:else class="empty-hint">暂无拼图记录，快去开始一局吧</text>
   </view>
+
+  <!-- 品牌展示 -->
+  <view class="brand-section">
+    <image src="/images/panda-logo.png" class="brand-logo" mode="aspectFit" />
+    <text class="brand-slogan">照片碎片化拼图 · 挑战你的记忆力</text>
+  </view>
 </view>

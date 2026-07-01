@@ -566,18 +566,32 @@ const CLOUD_FUNCTIONS = {
   }
 }
 
-// 生成6位字母房间号
+// 生成6位纯数字房间号
 function generateRoomId() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz'
-  let id = ''
-  for (let i = 0; i < 6; i++) {
-    id += chars[Math.floor(Math.random() * chars.length)]
-  }
-  // 检查是否已存在
   const rooms = readCollection('rooms')
-  const existing = rooms.some(r => r.roomId === id)
-  if (existing) return generateRoomId()
-  return id
+  const activeRooms = rooms.filter(r => r.status !== 'finished' && r.status !== 'expired')
+  const usedIds = new Set(activeRooms.map(r => r.roomId))
+
+  let id = ''
+  let attempts = 0
+  const maxAttempts = 50
+
+  while (attempts < maxAttempts) {
+    id = Math.floor(100000 + Math.random() * 900000).toString()
+    if (!usedIds.has(id)) {
+      return id
+    }
+    attempts++
+  }
+
+  for (let i = 100000; i < 1000000; i++) {
+    const sid = i.toString()
+    if (!usedIds.has(sid)) {
+      return sid
+    }
+  }
+
+  return Math.floor(100000 + Math.random() * 900000).toString()
 }
 
 // ========== 导出 API ==========

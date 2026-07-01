@@ -161,3 +161,22 @@
   font-size: 24rpx;
   color: #667eea;
 }
+
+.brand-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 30rpx 40rpx;
+  margin-top: 20rpx;
+}
+
+.brand-logo {
+  width: 300rpx;
+  height: 300rpx;
+  margin-bottom: 20rpx;
+}
+
+.brand-slogan {
+  font-size: 24rpx;
+  color: #999;
+}

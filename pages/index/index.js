@@ -2,6 +2,7 @@ Page({
   data: {
     selectedImage: 'https://picsum.photos/id/1/600/600',
     selectedDifficulty: 'easy',
+    gameMode: 'memory',
     gameStarted: false,
     showMemory: false,
     memoryCountdown: 5,
@@ -20,6 +21,9 @@ Page({
     totalPieces: 0,
     showMultiplayer: false,
     joinRoomId: '',
+    showHint: false,
+    hintPositionCorrect: 0,
+    hintRotationCorrect: 0,
     presetImages: [
       { id: 1, name: '山间小路', url: 'https://picsum.photos/id/1/600/600' },
       { id: 2, name: '湖光山色', url: 'https://picsum.photos/id/28/600/600' },
@@ -115,6 +119,13 @@ Page({
     })
   },
 
+  selectGameMode(e) {
+    const mode = e.currentTarget.dataset.mode
+    this.setData({
+      gameMode: mode
+    })
+  },
+
   selectMusic(e) {
     const index = parseInt(e.currentTarget.dataset.index)
     this.setData({
@@ -159,7 +170,7 @@ Page({
 
     this.setData({
       gameStarted: true,
-      showMemory: true,
+      showMemory: this.data.gameMode === 'memory',
       memoryCountdown: 5,
       gridSize: gridSize,
       pieceSize: pieceSize,
@@ -168,15 +179,25 @@ Page({
       selectedPiece: null,
       firstSelected: null,
       correctCount: 0,
-      totalPieces: gridSize * gridSize
+      totalPieces: gridSize * gridSize,
+      showHint: false
     })
 
     if (this.data.isMusicPlaying) {
       this.playMusic()
     }
 
-    this.startMemoryCountdown()
     this.initPieces()
+
+    if (this.data.gameMode === 'memory') {
+      this.startMemoryCountdown()
+    } else {
+      this.setData({
+        showRotateControls: true
+      })
+      this.startTimer()
+      this.shufflePieces()
+    }
   },
 
   startMemoryCountdown() {
@@ -243,14 +264,17 @@ Page({
       pieces: newPieces
     })
 
-    this.checkCorrectPieces()
+    if (this.data.gameMode === 'memory') {
+      this.checkCorrectPieces()
+    }
   },
 
   selectPiece(e) {
     const id = e.currentTarget.dataset.id
     const piece = this.data.pieces.find(p => p.id === id)
-    
-    if (!piece || piece.isCorrect) return
+
+    if (!piece) return
+    if (piece.isCorrect && this.data.gameMode === 'memory') return
 
     if (this.data.firstSelected === null) {
       this.setData({
@@ -293,14 +317,16 @@ Page({
   },
 
   rotatePieceLeft() {
-    if (!this.data.selectedPiece || this.data.selectedPiece.isCorrect) return
-    
+    if (!this.data.selectedPiece) return
+    if (this.data.selectedPiece.isCorrect && this.data.gameMode === 'memory') return
+
     this.rotatePiece(this.data.selectedPiece, -90)
   },
 
   rotatePieceRight() {
-    if (!this.data.selectedPiece || this.data.selectedPiece.isCorrect) return
-    
+    if (!this.data.selectedPiece) return
+    if (this.data.selectedPiece.isCorrect && this.data.gameMode === 'memory') return
+
     this.rotatePiece(this.data.selectedPiece, 90)
   },
 
@@ -324,26 +350,37 @@ Page({
   },
 
   checkCorrectPieces() {
-    const { pieces, gridSize, pieceSize } = this.data
+    const { pieces, gridSize, pieceSize, gameMode } = this.data
     let correctCount = 0
+    let positionCorrect = 0
+    let rotationCorrect = 0
 
     const updatedPieces = pieces.map(piece => {
       const isPositionCorrect = piece.x === piece.correctX && piece.y === piece.correctY
       const isRotationCorrect = piece.rotation === 0
       const isCorrect = isPositionCorrect && isRotationCorrect
-      
+
+      if (isPositionCorrect) positionCorrect++
+      if (isRotationCorrect) rotationCorrect++
       if (isCorrect) correctCount++
-      
+
       return {
         ...piece,
         isCorrect: isCorrect
       }
     })
 
-    this.setData({
+    const setDataObj = {
       pieces: updatedPieces,
       correctCount: correctCount
-    })
+    }
+
+    if (gameMode === 'challenge') {
+      setDataObj.hintPositionCorrect = positionCorrect
+      setDataObj.hintRotationCorrect = rotationCorrect
+    }
+
+    this.setData(setDataObj)
 
     if (correctCount === gridSize * gridSize) {
       this.winGame()
@@ -436,7 +473,34 @@ Page({
       gameStarted: false,
       showWin: false,
       timer: 0,
-      showRotateControls: false
+      showRotateControls: false,
+      showHint: false
+    })
+  },
+
+  toggleHint() {
+    const newShowHint = !this.data.showHint
+    if (newShowHint) {
+      this.updateHint()
+    }
+    this.setData({ showHint: newShowHint })
+  },
+
+  updateHint() {
+    const pieces = this.data.pieces
+    let positionCorrect = 0
+    let rotationCorrect = 0
+    pieces.forEach(piece => {
+      if (piece.x === piece.correctX && piece.y === piece.correctY) {
+        positionCorrect++
+      }
+      if (piece.rotation === 0) {
+        rotationCorrect++
+      }
+    })
+    this.setData({
+      hintPositionCorrect: positionCorrect,
+      hintRotationCorrect: rotationCorrect
     })
   },
 
@@ -459,13 +523,36 @@ Page({
   },
 
   joinRoom() {
-    const roomId = this.data.joinRoomId.trim().toUpperCase()
-    if (roomId.length === 6) {
+    const roomId = this.data.joinRoomId.trim()
+    if (/^\d{6}$/.test(roomId)) {
       wx.navigateTo({ url: `/pages/room/room?roomId=${roomId}` })
     }
   },
 
   onJoinRoomIdInput(e) {
-    this.setData({ joinRoomId: e.detail.value.toUpperCase() })
+    const val = e.detail.value.replace(/\D/g, '').slice(0, 6)
+    this.setData({ joinRoomId: val })
+  },
+
+  // ========== 分享功能 ==========
+
+  onShareAppMessage() {
+    const { showWin, finalTime, selectedImage, selectedDifficulty, gameMode } = this.data
+
+    if (showWin) {
+      const diffText = selectedDifficulty === 'easy' ? '简单3×3' : selectedDifficulty === 'medium' ? '中等4×4' : '困难5×5'
+      const modeText = gameMode === 'memory' ? '记忆模式' : '挑战模式'
+      return {
+        title: `我用${this.formatTime(finalTime)}完成了${diffText}${modeText}拼图！来挑战我吧~`,
+        path: '/pages/index/index',
+        imageUrl: selectedImage
+      }
+    }
+
+    return {
+      title: '照片碎片化拼图 - 挑战你的记忆力',
+      path: '/pages/index/index',
+      imageUrl: '/images/share-game.png'
+    }
   }
 })

@@ -24,11 +24,12 @@
 
     <view class="lobby-section">
       <text class="section-title">加入房间</text>
-      <text class="section-desc">输入6位房间号加入好友的房间</text>
+      <text class="section-desc">输入6位数字房间号加入好友的房间</text>
       <view class="join-form">
         <input
           class="room-input"
-          placeholder="输入6位房间号"
+          placeholder="输入6位数字房间号"
+          type="number"
           maxlength="6"
           value="{{joinRoomId}}"
           bindinput="onJoinRoomIdInput"
@@ -48,6 +49,10 @@
       <text class="round-progress" wx:if="{{room.status === 'playing'}}">
         第 {{room.currentRound + 1}}/{{room.maxRounds}} 轮
       </text>
+      <button class="btn-share" open-type="share" wx:if="{{room.status === 'waiting'}}">
+        <text class="share-icon">📤</text>
+        <text class="share-text">分享房间</text>
+      </button>
     </view>
 
     <!-- 玩家列表 -->
